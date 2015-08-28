@@ -3,7 +3,6 @@ var webpack = require("webpack");
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-
 module.exports = {
 
     cache: true,
@@ -44,12 +43,14 @@ module.exports = {
         }, {
             test: /\.(ttf|eot|svg)?(-1enn7r)?(#iefix-1enn7r)?(-1enn7r#symphinity)$/,
             loader: "file-loader"
+        },{
+            test: /[\/]angular\.js$/,
+            loader: "exports?angular"
         }],
 
         noParse: [
             path.join('node_modules', '/angular'),
-            path.join('node_modules', '/angular-ui-router'),
-            path.join('node_modules', '/Cardinal')
+            path.join('node_modules', '/angular-ui-router')
         ]
     },
 
@@ -69,13 +70,17 @@ module.exports = {
         //    }
         //}),
 
+        new webpack.ResolverPlugin(
+            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
+        ),
+
         new webpack.DefinePlugin({
             __API_BASE_URL__: JSON.stringify(process.env.API_BASE_URL),
             __DEV__: JSON.parse(process.env.DEV || true)
         })
     ],
 
-    devtool: 'eval',
+    //devtool: 'eval',
 
     devServer: {
         contentBase: "./src",
@@ -89,7 +94,10 @@ module.exports = {
     resolve: {
         alias: {
             'css': path.join(__dirname, 'src/css')
-        }
+        },
+        root: [
+            path.join(__dirname, "bower_components")
+        ]
 
     }
 };
