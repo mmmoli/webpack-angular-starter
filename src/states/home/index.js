@@ -1,4 +1,4 @@
-module.exports = function(ngModule) {
+export default ngModule => {
 
     require('./home.less');
 
